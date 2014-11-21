@@ -12,16 +12,16 @@ using namespace std;
 template<class T>
 struct DNode{
   typedef DNode<T>* link_type;
-	T value;
-	link_type prev;
-	link_type next;
+  T value;
+  link_type prev;
+  link_type next;
 
-	DNode() {}
-	DNode(T val, link_type prev, link_type next){
-		this->value = val;
-		this->prev = prev;
-		this->next = next;
-	}
+  DNode() {}
+  DNode(T val, link_type prev, link_type next){
+    this->value = val;
+    this->prev = prev;
+    this->next = next;
+  }
 };
 
 template<class T, class Ref, class Ptr>
@@ -78,42 +78,42 @@ public:
   
   typedef DNode<T>* link_type;
 
-	DoubleLinklist();
-	~DoubleLinklist();
+  DoubleLinklist();
+  ~DoubleLinklist();
 
   iterator begin() { return head->next;}
   const_iterator begin() const { return head->next;}
   iterator end() {return head;}
   const_iterator end() const {return head;}
 
-	size_t size() const;
-	bool isEmpty() const;
+  size_t size() const;
+  bool isEmpty() const;
 
-	T& get(size_t index) const;
-	T& get_first() const;
-	T& get_last() const;
+  T& get(size_t index) const;
+  T& get_first() const;
+  T& get_last() const;
 
-	bool insert(size_t pos, T val);
-	bool insert_first(T val);
-	bool append_last(T val);
+  bool insert(size_t pos, T val);
+  bool insert_first(T val);
+  bool append_last(T val);
 
-	bool delete_first();
-	bool delete_last();
-	bool delete_node(size_t pos);
+  bool delete_first();
+  bool delete_last();
+  bool delete_node(size_t pos);
   void clear();
   void print();
 
 private:
-	link_type head;
-	size_t count;
-	link_type get_node(size_t pos) const;
+  link_type head;
+  size_t count;
+  link_type get_node(size_t pos) const;
 };
 
 template<class T>
 DoubleLinklist<T>::DoubleLinklist(){
-	this->head = new DNode<T>();
-	this->head->prev = this->head->next = this->head;
-	this->count = 0;
+  this->head = new DNode<T>();
+  this->head->prev = this->head->next = this->head;
+  this->count = 0;
 }
 
 template<class T>
@@ -124,19 +124,19 @@ DoubleLinklist<T>::~DoubleLinklist(){
 
 template<class T>
 void DoubleLinklist<T>::clear(){
-	link_type ptr = head->next;
+  link_type ptr = head->next;
   for (size_t i = 0; i < this->count; ++i){
-		link_type tmp = ptr->next;
-		delete ptr;
-		ptr = tmp;
-	}
-	head->next = head->prev = head;
-	this->count = 0;
+    link_type tmp = ptr->next;
+    delete ptr;
+    ptr = tmp;
+  }
+  head->next = head->prev = head;
+  this->count = 0;
 }
 
 template<class T>
 size_t DoubleLinklist<T>::size() const{
-	return this->count;
+  return this->count;
 }
 
 template<class T>
@@ -146,43 +146,43 @@ bool DoubleLinklist<T>::isEmpty() const{
 
 template<class T>
 T& DoubleLinklist<T>::get(size_t index) const{
-	if (index >= 0 && index < this->count){
-		return get_node(index)->value;
-	}
-	else{
-		throw runtime_error("Index out of bound!");
-	}
+  if (index >= 0 && index < this->count){
+    return get_node(index)->value;
+  }
+  else{
+    throw runtime_error("Index out of bound!");
+  }
 }
 
 template<class T>
 T& DoubleLinklist<T>::get_first() const{
-	if (count > 0)
-		return this->head->value;
-	else
-		throw runtime_error("The link list is empty!");
+  if (count > 0)
+    return this->head->value;
+  else
+    throw runtime_error("The link list is empty!");
 }
 
 template<class T>
 T& DoubleLinklist<T>::get_last() const{
-	if (count > 0)
-		return this->head->prev->value;
+  if (count > 0)
+    return this->head->prev->value;
   else
-		throw runtime_error("The link list is empty!");
+    throw runtime_error("The link list is empty!");
 }
 
 template<class T>
 bool DoubleLinklist<T>::insert(size_t pos, T val){
-	if (pos >= 0 && pos < this->count){
-		link_type tmp = get_node(pos);
-		link_type newNode = new DNode<T>(val, tmp->prev, tmp);
-		tmp->prev->next = newNode;
-		tmp->prev = newNode;
-		this->count++;
-		return true;
-		}
-	else{
-		return false;
-	}
+  if (pos >= 0 && pos < this->count){
+    link_type tmp = get_node(pos);
+    link_type newNode = new DNode<T>(val, tmp->prev, tmp);
+    tmp->prev->next = newNode;
+    tmp->prev = newNode;
+    this->count++;
+    return true;
+    }
+  else{
+    return false;
+  }
 }
 
 template<class T>
@@ -191,67 +191,67 @@ bool DoubleLinklist<T>::insert_first(T val){
   head->next->prev = newNode;
   head->next = newNode;
   this->count++;
-	return true;	
+  return true;  
 }
 
 template<class T>
 bool DoubleLinklist<T>::append_last(T val){
-	link_type newNode = new DNode<T>(val, head->prev,head);
-	head->prev->next = newNode;
-	head->prev = newNode;
-	this->count++;
-	return true;
+  link_type newNode = new DNode<T>(val, head->prev,head);
+  head->prev->next = newNode;
+  head->prev = newNode;
+  this->count++;
+  return true;
 }
 
 template<class T>
 bool DoubleLinklist<T>::delete_first(){
-	return delete_node(0);
+  return delete_node(0);
 }
 
 template<class T>
 bool DoubleLinklist<T>::delete_last(){
-	return delete_node(this->count - 1);
+  return delete_node(this->count - 1);
 }
 
 template<class T>
 bool DoubleLinklist<T>::delete_node(size_t pos){
-	link_type del = get_node(pos);
-	if (del){
-		del->prev->next = del->next;
-		del->next->prev = del->prev;
-		delete del;
-		this->count--;
-		return true;
-	}
-	else{
-		return false;
-	}
+  link_type del = get_node(pos);
+  if (del){
+    del->prev->next = del->next;
+    del->next->prev = del->prev;
+    delete del;
+    this->count--;
+    return true;
+  }
+  else{
+    return false;
+  }
 }
 
 template<class T>
 typename DoubleLinklist<T>::link_type DoubleLinklist<T>::get_node(size_t pos) const{
-	if (pos >= 0 && pos < this->count){
-		link_type ptr = this->head;
-		for(size_t i = 0; i <= pos; ++i){
-			ptr = ptr->next;
-		}
-		return ptr;
-	}
-	else{
-		return NULL;
-	}
+  if (pos >= 0 && pos < this->count){
+    link_type ptr = this->head;
+    for(size_t i = 0; i <= pos; ++i){
+      ptr = ptr->next;
+    }
+    return ptr;
+  }
+  else{
+    return NULL;
+  }
 }
 
 template<class T>
 void DoubleLinklist<T>::print(){
-	if (this->count > 0){
-		link_type ptr = this->head;
-		for(size_t i = 0; i < this->count - 1; ++i){
-			ptr = ptr->next;
-			cout << ptr->value << ",";
-		}
-		cout << ptr->next->value << endl;
-	}
+  if (this->count > 0){
+    link_type ptr = this->head;
+    for(size_t i = 0; i < this->count - 1; ++i){
+      ptr = ptr->next;
+      cout << ptr->value << ",";
+    }
+    cout << ptr->next->value << endl;
+  }
   else{
     cout << "The list is empty!" << endl;
   }

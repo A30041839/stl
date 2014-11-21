@@ -15,26 +15,26 @@
 
 template<class T, class Ref, class Ptr>
 struct __deque_iterator{
-	typedef __deque_iterator<T, Ref, Ptr> iterator;
-	typedef __deque_iterator<T, const Ref, const Ptr> const_iterator;
-	typedef __deque_iterator self;
-	typedef std::random_access_iterator_tag iterator_category;
+  typedef __deque_iterator<T, Ref, Ptr> iterator;
+  typedef __deque_iterator<T, const Ref, const Ptr> const_iterator;
+  typedef __deque_iterator self;
+  typedef std::random_access_iterator_tag iterator_category;
 
-	typedef T value_type;
-	typedef Ref reference;
-	typedef Ptr pointer;
+  typedef T value_type;
+  typedef Ref reference;
+  typedef Ptr pointer;
   typedef size_t size_type;
-	typedef ptrdiff_t difference_type;
-	typedef T** map_pointer;
+  typedef ptrdiff_t difference_type;
+  typedef T** map_pointer;
 
-	//constructor
-	__deque_iterator(): cur(0), first(0), last(0), node(0) {}
+  //constructor
+  __deque_iterator(): cur(0), first(0), last(0), node(0) {}
 
-	__deque_iterator(T* x, map_pointer y)
-		: cur(x), first(*y), last(*y + DEQUE_BUFFER_SIZE), node(y) {}
+  __deque_iterator(T* x, map_pointer y)
+    : cur(x), first(*y), last(*y + DEQUE_BUFFER_SIZE), node(y) {}
 
-	__deque_iterator(const self& x)
-		: cur(x.cur), first(x.first), last(x.last), node(x.node) {}
+  __deque_iterator(const self& x)
+    : cur(x.cur), first(x.first), last(x.last), node(x.node) {}
 
   self& operator=(const self& x){
     cur = x.cur;
@@ -44,144 +44,144 @@ struct __deque_iterator{
     return *this;
   }
 
-	self& operator++(){
-		cur++;
-		if (cur == last){
-			//jump to the next buffer
-			set_node(node + 1, 0);
-		}
-		return *this;
-	}
+  self& operator++(){
+    cur++;
+    if (cur == last){
+      //jump to the next buffer
+      set_node(node + 1, 0);
+    }
+    return *this;
+  }
 
-	self operator++(int){
-	  self tmp = *this;
-		++*this;
-		return tmp;
-	}
+  self operator++(int){
+    self tmp = *this;
+    ++*this;
+    return tmp;
+  }
 
-	self& operator--(){
-		if (cur == first){
-			//jump to the previous buffer
-			set_node(node - 1, DEQUE_BUFFER_SIZE - 1);
-		}else{
-			cur--;
-		}
-		return *this;
-	}
+  self& operator--(){
+    if (cur == first){
+      //jump to the previous buffer
+      set_node(node - 1, DEQUE_BUFFER_SIZE - 1);
+    }else{
+      cur--;
+    }
+    return *this;
+  }
 
-	self operator--(int){
-		self tmp = *this;
-		--*this;
-		return tmp;
-	}
+  self operator--(int){
+    self tmp = *this;
+    --*this;
+    return tmp;
+  }
 
-	self operator+(difference_type n) const{
-		self tmp = *this;
-		tmp += n;
-		return tmp;
-	}
+  self operator+(difference_type n) const{
+    self tmp = *this;
+    tmp += n;
+    return tmp;
+  }
 
-	self operator-(difference_type n) const{
-		self tmp = *this;
-		tmp -= n;
-		return tmp;
-	}
+  self operator-(difference_type n) const{
+    self tmp = *this;
+    tmp -= n;
+    return tmp;
+  }
 
-	self& operator+=(difference_type n){
-		difference_type offset = cur + n - first;
-		if (offset >= 0 && offset < difference_type(DEQUE_BUFFER_SIZE)){
-			cur = cur + n;
-			return *this;
-		}else{
-			difference_type node_offset = offset > 0 ? (offset / difference_type(DEQUE_BUFFER_SIZE)) :
-				                                         (offset / difference_type(DEQUE_BUFFER_SIZE) - 1);
-			size_type pos = offset > 0 ? (offset % difference_type(DEQUE_BUFFER_SIZE)) :
-				                           (difference_type(DEQUE_BUFFER_SIZE) - (-offset) % difference_type(DEQUE_BUFFER_SIZE));
-			set_node(node + node_offset, pos);
-			return *this;
-		}
-	}
+  self& operator+=(difference_type n){
+    difference_type offset = cur + n - first;
+    if (offset >= 0 && offset < difference_type(DEQUE_BUFFER_SIZE)){
+      cur = cur + n;
+      return *this;
+    }else{
+      difference_type node_offset = offset > 0 ? (offset / difference_type(DEQUE_BUFFER_SIZE)) :
+                                                 (offset / difference_type(DEQUE_BUFFER_SIZE) - 1);
+      size_type pos = offset > 0 ? (offset % difference_type(DEQUE_BUFFER_SIZE)) :
+                                   (difference_type(DEQUE_BUFFER_SIZE) - (-offset) % difference_type(DEQUE_BUFFER_SIZE));
+      set_node(node + node_offset, pos);
+      return *this;
+    }
+  }
 
-	self& operator-=(difference_type n){
-		return operator+=(-n);
-	}
+  self& operator-=(difference_type n){
+    return operator+=(-n);
+  }
 
-	difference_type operator-(const self& x) const{
-		difference_type node_offset = node - x.node - 1;
-		difference_type offset = node_offset * difference_type(DEQUE_BUFFER_SIZE) 
-			                       + difference_type(cur - first) + difference_type(x.last - x.cur);
-		return offset;
-	}
+  difference_type operator-(const self& x) const{
+    difference_type node_offset = node - x.node - 1;
+    difference_type offset = node_offset * difference_type(DEQUE_BUFFER_SIZE) 
+                             + difference_type(cur - first) + difference_type(x.last - x.cur);
+    return offset;
+  }
 
-	reference operator*() const{
-		return *cur;
-	}
+  reference operator*() const{
+    return *cur;
+  }
 
-	pointer operator->() const{
-		return cur;
-	}
-	
-	bool operator==(const self& x) const{
-		return cur == x.cur;
-	}
+  pointer operator->() const{
+    return cur;
+  }
+  
+  bool operator==(const self& x) const{
+    return cur == x.cur;
+  }
 
-	bool operator!=(const self& x) const{
-		return cur != x.cur;
-	}
+  bool operator!=(const self& x) const{
+    return cur != x.cur;
+  }
 
-	bool operator<(const self&x) const{
-		return node == x.node ? cur < x.cur : node < x.node;
-	}
+  bool operator<(const self&x) const{
+    return node == x.node ? cur < x.cur : node < x.node;
+  }
 
-	T* cur;
-	T* first;
-	T* last;
-	map_pointer node;
+  T* cur;
+  T* first;
+  T* last;
+  map_pointer node;
 
-	void set_node(map_pointer _node, size_type _n){
-		node = _node;
-		first = *node;
-		last = *node + DEQUE_BUFFER_SIZE;
-		cur = first + _n;
-	}
+  void set_node(map_pointer _node, size_type _n){
+    node = _node;
+    first = *node;
+    last = *node + DEQUE_BUFFER_SIZE;
+    cur = first + _n;
+  }
 };
 
 
 template<class T>
 class deque{
 public:
-	typedef T value_type;
-	typedef T* pointer;
-	typedef T** map_pointer;
-	typedef T& reference;
-	typedef size_t size_type;
-	typedef ptrdiff_t difference_type;
-	typedef __deque_iterator<T, T&, T*> iterator;
-	typedef __deque_iterator<T, const T&, const T*> const_iterator;
+  typedef T value_type;
+  typedef T* pointer;
+  typedef T** map_pointer;
+  typedef T& reference;
+  typedef size_t size_type;
+  typedef ptrdiff_t difference_type;
+  typedef __deque_iterator<T, T&, T*> iterator;
+  typedef __deque_iterator<T, const T&, const T*> const_iterator;
 
-	//iterator
-	iterator begin() const{
-		return start;
-	}
-	iterator end() const{
-		return finish;
-	}
-	const_iterator cbegin() const{
-		return const_iterator(start.cur, start.node);
-	}
-	const_iterator cend() const{
-		return const_iterator(finish.cur, finish.node);
-	}
+  //iterator
+  iterator begin() const{
+    return start;
+  }
+  iterator end() const{
+    return finish;
+  }
+  const_iterator cbegin() const{
+    return const_iterator(start.cur, start.node);
+  }
+  const_iterator cend() const{
+    return const_iterator(finish.cur, finish.node);
+  }
 
-	//constructors
-	deque(){
-		map = new pointer[1];
-		map[0] = new value_type[DEQUE_BUFFER_SIZE];
-		map_start = map;
-		map_size = 1;
-		map_maxlen = 1;
-		start = iterator(map[0], &map[0]);
-		finish = start;
+  //constructors
+  deque(){
+    map = new pointer[1];
+    map[0] = new value_type[DEQUE_BUFFER_SIZE];
+    map_start = map;
+    map_size = 1;
+    map_maxlen = 1;
+    start = iterator(map[0], &map[0]);
+    finish = start;
   }
 
   deque(size_type n, const value_type& x) { fill_initialize(n, x); }
@@ -205,8 +205,8 @@ public:
   }
 
   reference operator[](size_type n) {
-		if (n >= size())
-			throw std::out_of_range("Index out of range!");
+    if (n >= size())
+      throw std::out_of_range("Index out of range!");
     return *(start + n);
   } 
 
@@ -234,7 +234,7 @@ public:
 
   void push_front(const value_type& x){
     if (start.cur > start.first){
-			--start.cur;
+      --start.cur;
       *start.cur = x;
     }else{
       push_front_aux(x);
@@ -294,9 +294,9 @@ public:
   void insert(iterator position, size_type n) { insert(position, n, value_type()); }
   
   void insert(iterator position, iterator first, iterator last){
-		difference_type left_len = position - start;
+    difference_type left_len = position - start;
     difference_type right_len = finish - position;
-		size_type n = last - first;
+    size_type n = last - first;
     if (left_len < right_len){
       //the left part is shorter, move the elements forward
       for (size_type i = 0; i < n; ++i)
@@ -310,7 +310,7 @@ public:
       std::copy_backward(start + left_len, finish - n, finish);
       std::copy(first, last, start + left_len);
     }
-	}
+  }
 
   void erase(iterator position){
     if (position == start){
@@ -343,13 +343,13 @@ public:
   }
 
 protected:
-	std::allocator<T> alloc;
-	map_pointer map;
-	size_type map_size;
-	size_type map_maxlen;
-	map_pointer map_start;
-	iterator start;
-	iterator finish;
+  std::allocator<T> alloc;
+  map_pointer map;
+  size_type map_size;
+  size_type map_maxlen;
+  map_pointer map_start;
+  iterator start;
+  iterator finish;
 
   void push_back_aux(const value_type& x);
 
@@ -381,61 +381,61 @@ protected:
     start = iterator(map[0], &map[0]);
     finish = start + n;
   }
-	
-	void map_free_end(){
-		*(map_start + map_size - 1) = 0;
-		--map_size;
-	}
+  
+  void map_free_end(){
+    *(map_start + map_size - 1) = 0;
+    --map_size;
+  }
 
-	void map_free_start(){
-		*map_start = 0;
-		--map_size;
-		++map_start;
-	}
+  void map_free_start(){
+    *map_start = 0;
+    --map_size;
+    ++map_start;
+  }
 
-	map_pointer map_alloc_end();
+  map_pointer map_alloc_end();
 
-	map_pointer map_alloc_start();
+  map_pointer map_alloc_start();
 
 };
 
 template<class T>
 deque<T>::deque(const deque<T>& x){
-	map = new pointer[1];
-	map[0] = new value_type[DEQUE_BUFFER_SIZE];
-	map_start = map;
-	map_size = 1;
-	map_maxlen = 1;
-	start = iterator(map[0], &map[0]);
-	finish = start;
+  map = new pointer[1];
+  map[0] = new value_type[DEQUE_BUFFER_SIZE];
+  map_start = map;
+  map_size = 1;
+  map_maxlen = 1;
+  start = iterator(map[0], &map[0]);
+  finish = start;
   insert(finish, x.begin(), x.end()); 
 }
 
 template<class T>
 void deque<T>::push_back_aux(const value_type& x){
   //construct a new buffer at the end
-	map_pointer ptr = map_alloc_end();
-	map_pointer prevptr = ptr - 1;
-	(*prevptr)[DEQUE_BUFFER_SIZE - 1] = x;
-	*ptr = new value_type[DEQUE_BUFFER_SIZE];
-	start.node = map_start;
-	finish.node = ptr;
-	finish.first = *ptr;
-	finish.last = *ptr + DEQUE_BUFFER_SIZE;
-	finish.cur = finish.first;
+  map_pointer ptr = map_alloc_end();
+  map_pointer prevptr = ptr - 1;
+  (*prevptr)[DEQUE_BUFFER_SIZE - 1] = x;
+  *ptr = new value_type[DEQUE_BUFFER_SIZE];
+  start.node = map_start;
+  finish.node = ptr;
+  finish.first = *ptr;
+  finish.last = *ptr + DEQUE_BUFFER_SIZE;
+  finish.cur = finish.first;
 }
 
 template<class T>
 void deque<T>::push_front_aux(const value_type& x){
   //construct a new buffer at the front
-	map_pointer ptr = map_alloc_start();
-	*ptr = new value_type[DEQUE_BUFFER_SIZE];
-	(*ptr)[DEQUE_BUFFER_SIZE - 1] = x;
-	finish.node = map_start + map_size - 1;
-	start.node = ptr;
-	start.first = *ptr;
-	start.last = *ptr + DEQUE_BUFFER_SIZE;
-	start.cur = start.last - 1;
+  map_pointer ptr = map_alloc_start();
+  *ptr = new value_type[DEQUE_BUFFER_SIZE];
+  (*ptr)[DEQUE_BUFFER_SIZE - 1] = x;
+  finish.node = map_start + map_size - 1;
+  start.node = ptr;
+  start.first = *ptr;
+  start.last = *ptr + DEQUE_BUFFER_SIZE;
+  start.cur = start.last - 1;
 }
 
 template<class T>
@@ -494,43 +494,43 @@ void deque<T>::erase_aux(iterator position){
 
 template<class T>
 typename deque<T>::map_pointer deque<T>::map_alloc_end(){
-	//if the end has free slot, then allocate it directly
-	if (map_start + map_size < map + map_maxlen){
-		++map_size;
-		return map_start + map_size - 1;
-	}else{
-		//allocate new map, increment the size by DEQUE_MAP_INCREMENT at the end
-		map_pointer _map = new pointer[map_maxlen + DEQUE_MAP_INCREMENT];
-		std::fill(_map, _map + map_maxlen + DEQUE_MAP_INCREMENT, nullptr);
-		std::copy(map, map + map_maxlen, _map);
-		++map_size;
-		map_maxlen += DEQUE_MAP_INCREMENT;
+  //if the end has free slot, then allocate it directly
+  if (map_start + map_size < map + map_maxlen){
+    ++map_size;
+    return map_start + map_size - 1;
+  }else{
+    //allocate new map, increment the size by DEQUE_MAP_INCREMENT at the end
+    map_pointer _map = new pointer[map_maxlen + DEQUE_MAP_INCREMENT];
+    std::fill(_map, _map + map_maxlen + DEQUE_MAP_INCREMENT, nullptr);
+    std::copy(map, map + map_maxlen, _map);
+    ++map_size;
+    map_maxlen += DEQUE_MAP_INCREMENT;
     map_start = map_start - map + _map;
-		delete[] map;
-		map = _map;
-		return map_start + map_size - 1;
-	}
+    delete[] map;
+    map = _map;
+    return map_start + map_size - 1;
+  }
 }
 
 template<class T>
 typename deque<T>::map_pointer deque<T>::map_alloc_start(){
-	//if the beginning has free slot, then allocate it directly
-	if (map_start > map){
-		++map_size;
-		--map_start;
-		return map_start;
-	}else{
-		//allocate new map, increment the size by DEQUE_MAP_INCREMENT at the beginning
-		map_pointer _map = new pointer[map_maxlen + DEQUE_MAP_INCREMENT];
-		std::fill(_map, _map + map_maxlen + DEQUE_MAP_INCREMENT, nullptr);
-		std::copy(map, map + map_maxlen, _map + DEQUE_MAP_INCREMENT);
-		++map_size;
-		map_maxlen += DEQUE_MAP_INCREMENT;
-		map_start = _map + DEQUE_MAP_INCREMENT - 1;
-		delete[] map;
-		map = _map;
-		return map_start;
-	}
+  //if the beginning has free slot, then allocate it directly
+  if (map_start > map){
+    ++map_size;
+    --map_start;
+    return map_start;
+  }else{
+    //allocate new map, increment the size by DEQUE_MAP_INCREMENT at the beginning
+    map_pointer _map = new pointer[map_maxlen + DEQUE_MAP_INCREMENT];
+    std::fill(_map, _map + map_maxlen + DEQUE_MAP_INCREMENT, nullptr);
+    std::copy(map, map + map_maxlen, _map + DEQUE_MAP_INCREMENT);
+    ++map_size;
+    map_maxlen += DEQUE_MAP_INCREMENT;
+    map_start = _map + DEQUE_MAP_INCREMENT - 1;
+    delete[] map;
+    map = _map;
+    return map_start;
+  }
 }
 
 template<class T>

@@ -13,21 +13,21 @@ void print(vector<int>& vec){
 
 int main(){
   vector<int> vec(5, 6);
-	print(vec);
+  print(vec);
   cout << vec.front() << ", " <<  vec.back() << endl;
   for (int i = 1; i < 10; i++)
     vec.push_back(i);
   cout << vec.size() << endl;
-	print(vec);
+  print(vec);
   vec.insert(vec.begin(), 10);
   print(vec);
-	vec.insert(vec.begin() + 2, 10);
+  vec.insert(vec.begin() + 2, 10);
   print(vec);
   vec.insert(vec.end() - 1, 10);
   print(vec);
-	cout << vec[2] << endl;
-	vec[2] = 9;
-	print(vec);
+  cout << vec[2] << endl;
+  vec[2] = 9;
+  print(vec);
   vec.pop_back();
   print(vec);
   vec.erase(vec.begin());
@@ -38,15 +38,15 @@ int main(){
   vec.erase(vec.begin(), vec.begin() + 2);
   print(vec);
 
-	vector<int> vec2 = vec;
-	print(vec2);
-	vec2 = vec;
+  vector<int> vec2 = vec;
+  print(vec2);
+  vec2 = vec;
 
   vec.clear();
   cout << vec.size() << endl;
-	cout << vec.capacity() << endl;
-	if (vec.empty())
-		cout << "vector is empty." << endl;
+  cout << vec.capacity() << endl;
+  if (vec.empty())
+    cout << "vector is empty." << endl;
 
   return 0;
 }

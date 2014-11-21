@@ -23,31 +23,31 @@ int main(){
     cout << *iter << ",";
     iter++;
   }
-	cout << endl;
+  cout << endl;
 
-	hashset1.insert("hello");
-	hashset1.insert("hello");
-	cout << *hashset1.begin() << endl;
+  hashset1.insert("hello");
+  hashset1.insert("hello");
+  cout << *hashset1.begin() << endl;
   if (hashset1.containsKey("cool"))
-		cout << "has cool" << endl;
-	if (hashset1.containsKey("hello"))
-		cout << "has hello" <<endl;
+    cout << "has cool" << endl;
+  if (hashset1.containsKey("hello"))
+    cout << "has hello" <<endl;
  
-	HashSet<string> hashset2(hashset1);
-	cout << "hashset2" << endl;
-	cout << *hashset2.begin() << "," << hashset2.size() << endl;
+  HashSet<string> hashset2(hashset1);
+  cout << "hashset2" << endl;
+  cout << *hashset2.begin() << "," << hashset2.size() << endl;
   
-	if (hashset1 == hashset2)
-		cout << "hashset1 and hashset2 are equal." << endl;
+  if (hashset1 == hashset2)
+    cout << "hashset1 and hashset2 are equal." << endl;
   
-	HashSet<string> hashset3(hashset1.begin(), hashset1.end());
-  cout << "hashset3" << endl;	
+  HashSet<string> hashset3(hashset1.begin(), hashset1.end());
+  cout << "hashset3" << endl; 
   HashSet<string>::iterator iter2 = hashset3.begin();
   while (iter2 != hashset3.end()){
     cout << *iter2 << ",";
     iter2++;
   }
-	cout << endl;
+  cout << endl;
   
   cout << "rehash test" << endl;
   HashSet<int> hashset4;

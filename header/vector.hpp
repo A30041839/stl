@@ -68,14 +68,14 @@ public:
       std::copy_backward(position, last, last + 1);
       T x_copy = x;
       *position = x_copy;
-			last++;
+      last++;
       return position;
     }else{
       expand_volume();
       std::copy_backward(position, last, last + 1);
       T x_copy = x;
       *position = x_copy;
-			last++;
+      last++;
       return position;
     }
   }
@@ -83,7 +83,7 @@ public:
   void pop_back(){
     if (first != last){
       alloc.destroy(--last);
-		}
+    }
   };
 
   void erase(iterator position){
@@ -109,7 +109,7 @@ protected:
   pointer last;
   pointer end_of_storage;
   value_type* array;
-	std::allocator<T> alloc;
+  std::allocator<T> alloc;
 
   void fill_initialize(size_type n, const T& x){
     array = new value_type[n];

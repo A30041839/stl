@@ -18,9 +18,9 @@ struct hash_node{
   size_type bucket_id;
 
   hash_node(): next(NULL), key(key_type()){}
-	explicit hash_node(const key_type& _key, const value_type& _value, size_type _hash_code, size_type _bucket_id)
-	: key(_key), value(_value), hash_code(_hash_code), bucket_id(_bucket_id)
-	{}
+  explicit hash_node(const key_type& _key, const value_type& _value, size_type _hash_code, size_type _bucket_id)
+  : key(_key), value(_value), hash_code(_hash_code), bucket_id(_bucket_id)
+  {}
 
   value_type* get_ptr(){
     return &value;
@@ -41,7 +41,7 @@ struct hashtable_iterator_base{
 template<class Key, class Value>
 struct hashtable_iterator:hashtable_iterator_base<Key, Value>{
   typedef typename hash_node<Key, Value>::value_type value_type;
-	typedef value_type* pointer_type;
+  typedef value_type* pointer_type;
   typedef value_type& reference;
   typedef hashtable_iterator self;
   typedef typename hashtable_iterator_base<Key, Value>::node_pointer node_pointer;
@@ -75,7 +75,7 @@ struct hashtable_iterator:hashtable_iterator_base<Key, Value>{
 template<class Key, class Value>
 struct hashtable_const_iterator:hashtable_iterator_base<Key, Value>{
   typedef typename hash_node<Key, Value>::value_type value_type;
-	typedef const value_type* pointer_type;
+  typedef const value_type* pointer_type;
   typedef const value_type& reference;
   typedef hashtable_const_iterator self;
   typedef typename hashtable_iterator_base<Key, Value>::node_pointer node_pointer;  
@@ -125,16 +125,16 @@ public:
   Hashtable(const Hashtable&);
   ~Hashtable();
   
-	//iterators
+  //iterators
   iterator begin() {return iterator(m_before_node->next);}
   const_iterator cbegin() const {return const_iterator(m_before_node->next);}
   iterator end() {return iterator();}
   const_iterator cend() const {return const_iterator();}
 
-	//public member functions
+  //public member functions
   Hashtable& operator=(const Hashtable&);
   size_type size() const;
-	bool containsKey(const key_type& key) const;
+  bool containsKey(const key_type& key) const;
   void clear();
 
 protected:
@@ -150,7 +150,7 @@ protected:
   size_type get_hash_code(const key_type& key) const;
 
 private:
-	void de_allocate();
+  void de_allocate();
   node_pointer* m_buckets;
   size_type m_current_size;
   size_type m_bucket_count;
@@ -173,42 +173,42 @@ Hashtable<Key, Value, Hasher>::Hashtable(const Hashtable& x): m_current_size(x.m
                                                        m_bucket_count(x.m_bucket_count),
                                                        m_hasher(x.m_hasher){
   m_buckets = new node_pointer[m_bucket_count];
-	memcpy(m_buckets, x.m_buckets, sizeof(x.m_buckets) * x.m_bucket_count);
-	m_before_node = new hash_node<key_type, value_type>();
-	node_pointer ptr = x.m_before_node->next;
-	node_pointer prev = m_before_node;
-	while (ptr){
-		node_pointer tmp = new hash_node<key_type, value_type>(ptr->key, ptr->value, ptr->hash_code, ptr->bucket_id);
+  memcpy(m_buckets, x.m_buckets, sizeof(x.m_buckets) * x.m_bucket_count);
+  m_before_node = new hash_node<key_type, value_type>();
+  node_pointer ptr = x.m_before_node->next;
+  node_pointer prev = m_before_node;
+  while (ptr){
+    node_pointer tmp = new hash_node<key_type, value_type>(ptr->key, ptr->value, ptr->hash_code, ptr->bucket_id);
     prev->next = tmp;
-		ptr = ptr->next;
-		prev = tmp;
-	}
+    ptr = ptr->next;
+    prev = tmp;
+  }
 }
 
 template<class Key, class Value, class Hasher>
 Hashtable<Key, Value, Hasher>::~Hashtable(){
-	de_allocate();
+  de_allocate();
 }
 
 template<class Key, class Value, class Hasher>
 Hashtable<Key, Value, Hasher>& Hashtable<Key, Value, Hasher>::operator=(const Hashtable& x){
-	de_allocate();
-	m_current_size = x.m_current_size;
-	m_bucket_count = x.m_bucket_count;
-	m_hasher = x.m_hasher;
+  de_allocate();
+  m_current_size = x.m_current_size;
+  m_bucket_count = x.m_bucket_count;
+  m_hasher = x.m_hasher;
 
   m_buckets = new node_pointer[m_bucket_count];
-	memcpy(m_buckets, x.m_buckets, sizeof(x.m_buckets) * x.m_bucket_count);
-	m_before_node = new hash_node<key_type, value_type>();
-	node_pointer ptr = x.m_before_node->next;
-	node_pointer prev = m_before_node;
-	while (ptr){
-		node_pointer tmp = new hash_node<key_type, value_type>(ptr->key, ptr->value, ptr->hash_code, ptr->bucket_id);
+  memcpy(m_buckets, x.m_buckets, sizeof(x.m_buckets) * x.m_bucket_count);
+  m_before_node = new hash_node<key_type, value_type>();
+  node_pointer ptr = x.m_before_node->next;
+  node_pointer prev = m_before_node;
+  while (ptr){
+    node_pointer tmp = new hash_node<key_type, value_type>(ptr->key, ptr->value, ptr->hash_code, ptr->bucket_id);
     prev->next = tmp;
-		ptr = ptr->next;
-		prev = tmp;
-	}
-	return *this;
+    ptr = ptr->next;
+    prev = tmp;
+  }
+  return *this;
 }
 
 
@@ -219,15 +219,15 @@ size_t Hashtable<Key, Value, Hasher>::size() const{
 
 template<class Key, class Value, class Hasher>
 bool Hashtable<Key, Value, Hasher>::containsKey(const key_type& key) const{
-	return bucket_contain_key(key, get_bucket_id(m_hasher(key)));
+  return bucket_contain_key(key, get_bucket_id(m_hasher(key)));
 }
 
 template<class Key, class Value, class Hasher>
 void Hashtable<Key, Value, Hasher>::clear(){
-	//remove elements in the hashtable and set the m_bucket_count to default
-	de_allocate();
+  //remove elements in the hashtable and set the m_bucket_count to default
+  de_allocate();
   m_current_size = 0;
- 	m_bucket_count = 101;
+  m_bucket_count = 101;
   m_buckets = new node_pointer[m_bucket_count];
   memset(m_buckets, 0, sizeof(m_buckets) * m_bucket_count);
   m_before_node = new hash_node<key_type, value_type>();
@@ -339,13 +339,13 @@ size_t Hashtable<Key, Value, Hasher>::get_bucket_id(size_type hash_code) const{
 template<class Key, class Value, class Hasher>
 void Hashtable<Key, Value, Hasher>::de_allocate(){
   delete m_buckets;
-	node_pointer ptr = m_before_node->next;
-	while (ptr){
-		node_pointer tmp = ptr->next;
-		delete ptr;
-		ptr = tmp;
-	}
-	delete m_before_node;
+  node_pointer ptr = m_before_node->next;
+  while (ptr){
+    node_pointer tmp = ptr->next;
+    delete ptr;
+    ptr = tmp;
+  }
+  delete m_before_node;
 }
 
 template<class Key, class Value, class Hasher>
