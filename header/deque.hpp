@@ -1,7 +1,6 @@
 #ifndef DEQUE_H
 #define DEQUE_H
 
-#include <memory>
 #include <algorithm>
 #include <stdexcept>
 
@@ -195,30 +194,30 @@ public:
   deque<T>& operator=(const deque<T>& x){
     if (this != &x){
       if (size() >= x.size()){
-        erase(copy(x.begin(), x.end(), begin()), end());
+        erase(std::copy(x.begin(), x.end(), begin()), end());
       }else{
         insert(end(), x.size() - size());
-        copy(x.begin(), x.end(), begin());
+        std::copy(x.begin(), x.end(), begin());
       }
     }
     return *this;
   }
 
-  reference operator[](size_type n) {
+  reference operator[](size_type n) const {
     if (n >= size())
       throw std::out_of_range("Index out of range!");
     return *(start + n);
   } 
 
-  reference front() { return *start; }
+  reference front() const { return *start; }
   
-  reference back() {
+  reference back() const {
     iterator tmp = finish;
     --tmp;
     return *tmp;
   }
 
-  bool empty() { return finish == start; }
+  bool empty() const { return finish == start; }
 
   size_type size() const {  return size_type(finish - start); }
 
@@ -245,7 +244,6 @@ public:
     if (empty()) return;
     if (finish.cur > finish.first){
       --finish.cur;
-      alloc.destroy(finish.cur);
     }else{
       pop_back_aux();
     }
@@ -254,7 +252,6 @@ public:
   void pop_front(){
     if (empty()) return;
     if (start.cur != start.last - 1){
-      alloc.destroy(start.cur);
       ++start.cur;
     }else{
       pop_front_aux();
@@ -343,7 +340,6 @@ public:
   }
 
 protected:
-  std::allocator<T> alloc;
   map_pointer map;
   size_type map_size;
   size_type map_maxlen;
@@ -441,7 +437,6 @@ void deque<T>::push_front_aux(const value_type& x){
 template<class T>
 void deque<T>::pop_back_aux(){
   --finish;
-  alloc.destroy(finish.cur);
   //release the last buffer
   delete[] *(map_start + map_size - 1);
   *(map_start + map_size - 1) = 0;
@@ -451,9 +446,7 @@ void deque<T>::pop_back_aux(){
 template<class T>
 void deque<T>::pop_front_aux(){
   //release the first buffer
-  alloc.destroy(start.cur);
   ++start;
-  //release the first buffer
   delete[] *map_start;
   *map_start = 0;
   ++map_start;

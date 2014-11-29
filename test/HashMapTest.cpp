@@ -1,5 +1,5 @@
+#include "../header/HashMap.hpp"
 #include <iostream>
-#include "HashMap.hpp"
 
 void print(HashMap<std::string, int>& x){
   HashMap<std::string, int>::iterator iter = x.begin();

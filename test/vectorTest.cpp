@@ -1,5 +1,6 @@
+#include "../header/vector.hpp"
 #include <iostream>
-#include "vector.hpp"
+
 using namespace std;
 
 void print(vector<int>& vec){

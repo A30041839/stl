@@ -1,4 +1,4 @@
-#include "BinaryTree.hpp"
+#include "../header/BinaryTree.hpp"
 using namespace std;
 
 int main(){

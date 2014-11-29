@@ -1,6 +1,6 @@
 #include <iostream>
-#include "algorithms.hpp"
-#include "vector.hpp"
+#include "../header/algorithms.hpp"
+#include "../header/vector.hpp"
 
 using namespace std;
 

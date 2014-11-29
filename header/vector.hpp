@@ -2,7 +2,6 @@
 #define VECTOR_H
 
 #include <algorithm>
-#include <memory>
 
 template<class T>
 class vector{
@@ -82,22 +81,18 @@ public:
 
   void pop_back(){
     if (first != last){
-      alloc.destroy(--last);
+      --last;
     }
   };
 
   void erase(iterator position){
     if (position + 1 != last)
       std::copy(position + 1, last, position);
-    alloc.destroy(--last);
+    --last;
   }
 
   void erase(iterator start, iterator finish){
-    iterator i = std::copy(finish, last, start);
-    while (i != last){
-      alloc.destroy(i);
-      i++;
-    }
+    std::copy(finish, last, start);
     last = last - (finish - start);
   }
 
@@ -109,7 +104,6 @@ protected:
   pointer last;
   pointer end_of_storage;
   value_type* array;
-  std::allocator<T> alloc;
 
   void fill_initialize(size_type n, const T& x){
     array = new value_type[n];

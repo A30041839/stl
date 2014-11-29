@@ -1,4 +1,4 @@
-#include "trie.hpp"
+#include "../header/trie.hpp"
 #include <iostream>
 using namespace std;
 
