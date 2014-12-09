@@ -291,7 +291,15 @@ public:
   void postOrderNorecurse2() const;
   void printLevel(size_t level) const;
   //!hight of tree
-  int getHight() const;
+  int getHight() const {
+    return getHight(this->root);
+  }
+  int getSubTreeHight(Tnode<T>* node) const{
+    return getHight(node);
+  }
+  Tnode<T>* getRoot() const{
+    return this->root;
+  }
 
 private:
   Tnode<T>* root;
@@ -412,11 +420,6 @@ void BinaryTree<T>::printLevel(Tnode<T>* node, size_t level) const{
     printLevel(node->lchild, level - 1);
     printLevel(node->rchild, level - 1);
   }
-}
-
-template<class T>
-int BinaryTree<T>::getHight() const{
-  return getHight(this->root);
 }
 
 template<class T>
