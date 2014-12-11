@@ -346,6 +346,37 @@ BinaryTree<T>::BinaryTree(const char* input){
   }
 }
 
+//partialization for type int
+template<>
+BinaryTree<int>::BinaryTree(const char* input){
+  //使用广义表构建二叉树
+  if (input == NULL) return;
+  Tnode<int>* ptr1;
+  Tnode<int>* ptr2;
+  this->root = NULL;
+  stack<Tnode<int>* > _stack;
+  int k = 0;
+  for (int i = 0; i < strlen(input); ++i){
+    switch (input[i]){
+      case '(' : _stack.push(ptr2); ptr1 = ptr2; k = 1; break;
+      case ')' : _stack.pop(); break;
+      case ',' : k = 2; break;
+      default:
+      ptr2 = new Tnode<int>(input[i] - '0');
+      if (this->root == NULL){
+        this->root = ptr2;
+      }else{
+        ptr1 = _stack.top();
+        if (k == 1){
+          ptr1->lchild = ptr2;
+        }else{
+          ptr1->rchild = ptr2;
+        }
+      }
+    }
+  }
+}
+
 template<class T>
 BinaryTree<T>::~BinaryTree(){
   releaseTree(this->root);
